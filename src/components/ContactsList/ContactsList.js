@@ -6,6 +6,9 @@ import IconButton, {
 import { ReactComponent as IconCross } from "../../images/cross.svg";
 import addClassNames from "../../utils/addClassNames";
 
+import { connect } from "react-redux";
+import { deleteContact } from "../../redux/contacts/contacts-actions";
+
 const ContactsList = ({ contacts, onDeleteContactBtnClick }) => {
   const contactsListClassNames = addClassNames("list", style.contactsList);
   const contactNameClassNames = addClassNames("link", style.contactsNumber);
@@ -45,4 +48,22 @@ ContactsList.propTypes = {
   onDeleteContactBtnClick: PropTypes.func.isRequired,
 };
 
-export default ContactsList;
+const mapStateToProps = (state) => {
+  const normalizedFilterValue = state.contacts.filter
+    .toLocaleLowerCase()
+    .trim();
+
+  const filteredContacts = state.contacts.items.filter((item) =>
+    item.name.toLocaleLowerCase().includes(normalizedFilterValue)
+  );
+
+  return {
+    contacts: filteredContacts,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  onDeleteContactBtnClick: (id) => dispatch(deleteContact(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
