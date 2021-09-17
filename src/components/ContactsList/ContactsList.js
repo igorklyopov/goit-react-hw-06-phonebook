@@ -15,7 +15,7 @@ const ContactsList = ({ contacts, onDeleteContactBtnClick }) => {
 
   return (
     <ul className={contactsListClassNames}>
-      {contacts.map(({ id, name, number }) => (
+      {contacts?.map(({ id, name, number }) => (
         <li key={id} className={style.contactsListItem}>
           <p className={style.contactsName}>{name}: </p>
           <a href={`tel:${number}`} className={contactNameClassNames}>
@@ -49,11 +49,11 @@ ContactsList.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  const normalizedFilterValue = state.contacts.filter
+  const normalizedFilterValue = state?.contacts?.filter
     .toLocaleLowerCase()
     .trim();
 
-  const filteredContacts = state.contacts.items.filter((item) =>
+  const filteredContacts = state?.contacts?.items?.filter((item) =>
     item.name.toLocaleLowerCase().includes(normalizedFilterValue)
   );
 

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+// import React, { useState, useEffect } from "react";
 import Container from "./components/Container";
 import ContactsList from "./components/ContactsList";
 import ContactForm from "./components/ContactForm";

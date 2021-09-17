@@ -1,15 +1,15 @@
-import PropTypes from "prop-types";
 import React, { useState } from "react";
-/////////////////////
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { addContact } from "../../redux/contacts/contacts-actions";
-////////////////////
 import Button from "../Button";
 import style from "../ContactForm/ContactForm.module.css";
+import { store } from "../../redux/store";
 
 function ContactForm({ onSubmitData }) {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const state = store.getState();
 
   const onInputChange = (e) => {
     if (e.target.name === "name") setName(e.target.value);
@@ -18,6 +18,24 @@ function ContactForm({ onSubmitData }) {
 
   const onFormSubmit = (e) => {
     e.preventDefault();
+
+    const duplicateContactName = state.contacts.items.find(
+      (contact) => contact.name === name
+    );
+    const duplicateContactNumber = state.contacts.items.find(
+      (contact) => contact.number === number
+    );
+
+    if (duplicateContactName) {
+      alert(`${name} is already in contacts!`);
+      return;
+    }
+    if (duplicateContactNumber) {
+      alert(
+        `${number} is already in contacts! (${duplicateContactNumber.name} has this number)`
+      );
+      return;
+    }
 
     onSubmitData(name, number);
 
