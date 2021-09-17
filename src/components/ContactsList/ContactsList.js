@@ -1,17 +1,21 @@
-import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
 import style from "../ContactsList/ContactsList.module.css";
 import IconButton, {
   deleteContactBtnClassNames,
 } from "../IconButton/IconButton";
 import { ReactComponent as IconCross } from "../../images/cross.svg";
 import addClassNames from "../../utils/addClassNames";
-
-import { connect } from "react-redux";
 import { deleteContact } from "../../redux/contacts/contacts-actions";
+import { getFilteredContacts } from "../../redux/contacts/contacts-selectors";
 
-const ContactsList = ({ contacts, onDeleteContactBtnClick }) => {
+const ContactsList = () => {
   const contactsListClassNames = addClassNames("list", style.contactsList);
   const contactNameClassNames = addClassNames("link", style.contactsNumber);
+
+  const contacts = useSelector(getFilteredContacts);
+
+  const dispatch = useDispatch();
+  const onDeleteContactBtnClick = (id) => dispatch(deleteContact(id));
 
   return (
     <ul className={contactsListClassNames}>
@@ -37,33 +41,4 @@ const ContactsList = ({ contacts, onDeleteContactBtnClick }) => {
   );
 };
 
-ContactsList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  onDeleteContactBtnClick: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  const normalizedFilterValue = state?.contacts?.filter
-    .toLocaleLowerCase()
-    .trim();
-
-  const filteredContacts = state?.contacts?.items?.filter((item) =>
-    item.name.toLocaleLowerCase().includes(normalizedFilterValue)
-  );
-
-  return {
-    contacts: filteredContacts,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  onDeleteContactBtnClick: (id) => dispatch(deleteContact(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
+export default ContactsList;

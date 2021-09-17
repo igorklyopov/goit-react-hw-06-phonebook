@@ -1,9 +1,14 @@
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import style from "../Filter/Filter.module.css";
 import { changeFilter } from "../../redux/contacts/contacts-actions";
 
-const Filter = ({ value, onFilterChange }) => {
+function Filter({ value }) {
+  const dispatch = useDispatch();
+
+  const onFilterChange = (e) => {
+    dispatch(changeFilter(e.target.value));
+  };
+
   return (
     <label className={style.contactsFilterLabel}>
       <span className={style.contactsFilterLabelText}>
@@ -17,14 +22,6 @@ const Filter = ({ value, onFilterChange }) => {
       />
     </label>
   );
-};
+}
 
-Filter.propTypes = {
-  onFilterChange: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  onFilterChange: (e) => dispatch(changeFilter(e.target.value)),
-});
-
-export default connect(null, mapDispatchToProps)(Filter);
+export default Filter;

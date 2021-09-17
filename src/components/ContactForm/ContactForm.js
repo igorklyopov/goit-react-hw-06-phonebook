@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../redux/contacts/contacts-actions";
+import { getContacts } from "../../redux/contacts/contacts-selectors";
 import Button from "../Button";
 import style from "../ContactForm/ContactForm.module.css";
-import { store } from "../../redux/store";
 
-function ContactForm({ onSubmitData }) {
+function ContactForm() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
-  const state = store.getState();
+
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
   const onInputChange = (e) => {
     if (e.target.name === "name") setName(e.target.value);
@@ -19,10 +20,10 @@ function ContactForm({ onSubmitData }) {
   const onFormSubmit = (e) => {
     e.preventDefault();
 
-    const duplicateContactName = state.contacts.items.find(
+    const duplicateContactName = contacts.find(
       (contact) => contact.name === name
     );
-    const duplicateContactNumber = state.contacts.items.find(
+    const duplicateContactNumber = contacts.find(
       (contact) => contact.number === number
     );
 
@@ -37,7 +38,7 @@ function ContactForm({ onSubmitData }) {
       return;
     }
 
-    onSubmitData(name, number);
+    dispatch(addContact(name, number));
 
     reset();
   };
@@ -80,12 +81,4 @@ function ContactForm({ onSubmitData }) {
   );
 }
 
-ContactForm.propTypes = {
-  onSubmitData: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  onSubmitData: (name, number) => dispatch(addContact(name, number)),
-});
-
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default ContactForm;
